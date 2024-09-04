@@ -1,4 +1,4 @@
-config file 
+# config file for Turkey
 ```
 FWTYPE=iptables
 SET_MAXELEM=522288
