@@ -1,29 +1,15 @@
-# config file for Turkey
 ```
-FWTYPE=iptables
-SET_MAXELEM=522288
-IPSET_OPT="hashsize 262144 maxelem $SET_MAXELEM"
-IP2NET_OPT4="--prefix-length=22-30 --v4-threshold=3/4"
-IP2NET_OPT6="--prefix-length=56-64 --v6-threshold=5"
-AUTOHOSTLIST_RETRANS_THRESHOLD=3
-AUTOHOSTLIST_FAIL_THRESHOLD=3
-AUTOHOSTLIST_FAIL_TIME=60
-AUTOHOSTLIST_DEBUGLOG=0
-MDIG_THREADS=30
-GZIP_LISTS=1
-MODE=nfqws
-MODE_HTTP=1
-MODE_HTTP_KEEPALIVE=0
-MODE_HTTPS=1
-MODE_QUIC=0
-MODE_FILTER=none
-DESYNC_MARK=0x40000000
-DESYNC_MARK_POSTNAT=0x20000000
-NFQWS_OPT_DESYNC="-dpi-desync=fake --dpi-desync-ttl=3"
-NFQWS_OPT_DESYNC_QUIC="--dpi-desync=fake --dpi-desync-repeats=6"
-TPWS_OPT="--hostspell=HOST --split-http-req=method --split-pos=3 --oob"
-FLOWOFFLOAD=donttouch
-IFACE_WAN=enp6s0
-INIT_APPLY_FW=1
-DISABLE_IPV6=1
+while uci -q delete https-dns-proxy.@https-dns-proxy[0]; do :; done
+uci set https-dns-proxy.dns="https-dns-proxy"
+uci set https-dns-proxy.dns.bootstrap_dns="8.8.8.8,8.8.4.4"
+uci set https-dns-proxy.dns.resolver_url="https://adblock.dns.mullvad.net/dns-query"
+uci set https-dns-proxy.dns.listen_addr="127.0.0.1"
+uci set https-dns-proxy.dns.listen_port="5053"
+uci commit https-dns-proxy
+service https-dns-proxy restart
+```
+```
+opkg update
+opkg install luci-app-https-dns-proxy https-dns-proxy
+service rpcd restart
 ```
